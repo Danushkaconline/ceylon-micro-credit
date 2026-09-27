@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header, news_card %}
+{% block title %}News &amp; Events | {{ site.company_name }}{% endblock %}
+{% block content %}
+{{ page_header("News & Events", "Latest updates, notices and announcements", image=site.img_news) }}
+<section class="section">
+  <div class="container">
+    <div class="row g-4">
+      {% for n in items %}
+      <div class="col-md-6 col-lg-4">{{ news_card(n) }}</div>
+      {% else %}
+      <p class="text-center text-muted">No news yet. Please check back soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.company_name }} | {{ site.tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site.company_name }} - Business Loans, Mortgage Loans, Motor Bicycle & Three-Wheeler Leasing, Group Loans and SME Loans in {{ site.city }}.{% endblock %}">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- Top info bar -->
+<div class="topbar d-none d-md-block">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div>
+      <span class="me-4"><i class="bi bi-geo-alt-fill"></i> {{ site.address }}</span>
+      <span><i class="bi bi-clock-fill"></i> {{ site.hours }}</span>
+    </div>
+    <div>
+      <a href="tel:{{ site.phone|tel }}" class="me-3"><i class="bi bi-telephone-fill"></i> {{ site.phone }}</a>
+      {% if site.email %}<a href="mailto:{{ site.email }}"><i class="bi bi-envelope-fill"></i> {{ site.email }}</a>{% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-xl sticky-top main-nav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('public.home') }}">
+      <span class="brand-mark">CMC</span>
+      <span class="brand-text">{{ site.company_name }}<small>{{ site.tagline }}</small></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      {% set ep = request.endpoint or '' %}
+      <ul class="navbar-nav ms-auto align-items-xl-center">
+        <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'public.home' }}" href="{{ url_for('public.home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'public.about' }}" href="{{ url_for('public.about') }}">About Us</a></li>
+        {% for cat in nav_categories %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {{ 'active' if (category is defined and category.id == cat.id) or (product is defined and product.category_id == cat.id) }}"
+             href="{{ url_for('public.category', slug=cat.slug) }}" role="button" data-bs-toggle="dropdown">{{ cat.name }}</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item fw-semibold" href="{{ url_for('public.category', slug=cat.slug) }}"><i class="bi {{ cat.icon }}"></i> All {{ cat.name }}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            {% for p in cat.active_products %}
+            <li><a class="dropdown-item" href="{{ url_for('public.product', slug=p.slug) }}"><i class="bi {{ p.icon }}"></i> {{ p.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+        <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'public.calculator' }}" href="{{ url_for('public.calculator') }}">Calculator</a></li>
+        <li class="nav-item"><a class="nav-link {{ 'active' if ep.startswith('public.news') }}" href="{{ url_for('public.news_list') }}">News</a></li>
+        <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'public.contact' }}" href="{{ url_for('public.contact') }}">Contact</a></li>
+        <li class="nav-item ms-xl-2 mt-2 mt-xl-0"><a class="btn btn-accent text-nowrap" href="{{ url_for('public.apply') }}">Apply Now</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="container mt-3">
+    {% for cat, msg in messages %}
+    <div class="alert alert-{{ cat }} alert-dismissible fade show" role="alert">
+      {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<!-- Call to action -->
+{% block cta %}
+<section class="cta-band">
+  <div class="container d-md-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="mb-1">Ready to take the next step?</h3>
+      <p class="mb-md-0">Visit our Kadawatha office or call us today - our officers are happy to help.</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="tel:{{ site.phone|tel }}" class="btn btn-light btn-lg text-dark"><i class="bi bi-telephone-fill"></i> {{ site.phone }}</a>
+      <a href="{{ url_for('public.apply') }}" class="btn btn-accent btn-lg">Apply Online</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="text-white">{{ site.company_name }}</h5>
+        <p>{{ site.mission }}</p>
+        <div class="social">
+          {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
+          {% if site.whatsapp %}<a href="https://wa.me/{{ site.whatsapp|tel }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>{% endif %}
+        </div>
+      </div>
+      {% for cat in nav_categories %}
+      <div class="col-6 col-lg-2">
+        <h6>{{ cat.name }}</h6>
+        <ul class="list-unstyled">
+          {% for p in cat.active_products %}
+          <li><a href="{{ url_for('public.product', slug=p.slug) }}">{{ p.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+      <div class="col-lg-2">
+        <h6>Contact</h6>
+        <ul class="list-unstyled">
+          <li><i class="bi bi-geo-alt"></i> {{ site.address }}</li>
+          <li><a href="tel:{{ site.phone|tel }}"><i class="bi bi-telephone"></i> {{ site.phone }}</a></li>
+          <li><a href="{{ url_for('public.news_list') }}"><i class="bi bi-newspaper"></i> News &amp; Events</a></li>
+          {% if site.email %}<li><a href="mailto:{{ site.email }}"><i class="bi bi-envelope"></i> {{ site.email }}</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between flex-wrap small">
+      <span>&copy; <span id="year"></span> {{ site.company_name }}. All rights reserved.</span>
+      <a href="{{ url_for('admin.login') }}">Staff login</a>
+    </div>
+  </div>
+</footer>
+
+<a href="tel:{{ site.phone|tel }}" class="float-call" aria-label="Call us"><i class="bi bi-telephone-fill"></i></a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

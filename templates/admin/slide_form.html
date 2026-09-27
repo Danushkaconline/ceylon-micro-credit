@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% from "admin/_form.html" import field, checkbox, image_field %}
+{% block title %}{{ 'Edit slide' if slide.id else 'New slide' }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('admin.slides') }}" class="small">&larr; Slides</a>
+<h3 class="my-3">{{ 'Edit slide' if slide.id else 'New slide' }}</h3>
+<form method="post" enctype="multipart/form-data" class="admin-card">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="row g-3">
+    {{ field("eyebrow", "Small label above title", slide.eyebrow, col="col-md-6") }}
+    {{ field("sort_order", "Display order", slide.sort_order or 0, type="number", col="col-md-3") }}
+    {{ field("title", "Title", slide.title, required=true) }}
+    {{ field("text", "Text", slide.text, type="textarea") }}
+    {{ field("button_text", "Button text", slide.button_text, col="col-md-6") }}
+    {{ field("button_link", "Button link", slide.button_link, help="e.g. <code>/apply</code> or <code>/services/micro-leasing</code>", col="col-md-6") }}
+    {{ image_field("image", slide.image) }}
+    {{ checkbox("is_active", "Show on website", slide.is_active) }}
+    <div class="col-12"><button class="btn btn-primary">Save slide</button></div>
+  </div>
+</form>
+{% endblock %}

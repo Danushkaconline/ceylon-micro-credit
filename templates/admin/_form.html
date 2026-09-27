@@ -1,0 +1,39 @@
+{# Admin form helpers #}
+{% macro field(name, label, value="", type="text", help="", required=false, col="col-12") %}
+<div class="{{ col }}">
+  <label class="form-label fw-semibold" for="f_{{ name }}">{{ label }}{% if required %} *{% endif %}</label>
+  {% if type == "textarea" %}
+  <textarea class="form-control" id="f_{{ name }}" name="{{ name }}" rows="4" {{ 'required' if required }}>{{ value if value is not none }}</textarea>
+  {% else %}
+  <input class="form-control" id="f_{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value if value is not none }}"
+         {{ 'required' if required }} {{ 'step=any' if type == 'number' }}>
+  {% endif %}
+  {% if help %}<div class="form-text">{{ help|safe }}</div>{% endif %}
+</div>
+{% endmacro %}
+
+{% macro checkbox(name, label, checked) %}
+<div class="col-12"><div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="f_{{ name }}" name="{{ name }}" {{ 'checked' if checked }}>
+  <label class="form-check-label" for="f_{{ name }}">{{ label }}</label>
+</div></div>
+{% endmacro %}
+
+{% macro image_field(name, current) %}
+<div class="col-12">
+  <label class="form-label fw-semibold">Image</label>
+  {% if current %}
+  <div class="mb-2 d-flex align-items-center gap-3">
+    <img src="{{ current|img }}" alt="" style="height:80px;border-radius:8px;object-fit:cover">
+    <div class="form-check"><input class="form-check-input" type="checkbox" name="{{ name }}_remove" id="{{ name }}_remove">
+      <label class="form-check-label" for="{{ name }}_remove">Remove image</label></div>
+  </div>
+  {% endif %}
+  <input class="form-control mb-2" type="file" name="{{ name }}" accept="image/*">
+  <input class="form-control" type="url" name="{{ name }}_url" placeholder="...or paste an image URL (optional)">
+  <div class="form-text">PNG, JPG or WEBP, up to 5 MB. Wide images (1920 x 800) work best for slides.</div>
+</div>
+{% endmacro %}
+
+{% macro icon_help() %}Bootstrap icon class, e.g. <code>bi-shop</code>, <code>bi-bicycle</code>. Browse icons at
+<a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">icons.getbootstrap.com</a>.{% endmacro %}

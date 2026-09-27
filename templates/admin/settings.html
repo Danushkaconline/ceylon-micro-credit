@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block title %}Site Settings{% endblock %}
+{% block content %}
+<h3 class="mb-2">Site Settings</h3>
+<p class="text-muted">Company details and page text used across the website. Changes appear immediately.</p>
+<form method="post" enctype="multipart/form-data" class="admin-card">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="row g-3">
+    {% for s in items if not s.key.startswith('img_') %}
+    {% set long = s.value|length > 90 or s.key in ['about_text', 'hero_text', 'about_short'] %}
+    <div class="{{ 'col-12' if long else 'col-md-6' }}">
+      <label class="form-label fw-semibold" for="s_{{ s.key }}">{{ s.label or s.key }}</label>
+      {% if long %}
+      <textarea class="form-control" id="s_{{ s.key }}" name="{{ s.key }}" rows="3">{{ s.value }}</textarea>
+      {% else %}
+      <input class="form-control" id="s_{{ s.key }}" name="{{ s.key }}" value="{{ s.value }}">
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="col-12"><hr><h5 class="mb-0">Page images</h5>
+      <p class="text-muted small mb-0">Upload a new photo, paste an image link, or tick "Remove" to show a plain black banner.</p></div>
+    {% for s in items if s.key.startswith('img_') %}
+    <div class="col-md-6">
+      <div class="border rounded-3 p-3 h-100">
+        <label class="form-label fw-semibold">{{ (s.label or s.key).replace('Image: ', '') }}</label>
+        {% if s.value %}<img src="{{ s.value|img }}" alt="" class="w-100 rounded mb-2" style="height:140px;object-fit:cover">
+        {% else %}<div class="bg-dark rounded mb-2 d-grid text-white-50 small" style="height:140px;place-items:center">No image</div>{% endif %}
+        <input class="form-control form-control-sm mb-2" type="file" name="{{ s.key }}" accept="image/*">
+        <input class="form-control form-control-sm mb-2" type="url" name="{{ s.key }}_url" placeholder="...or paste an image link">
+        {% if s.value %}<div class="form-check small"><input class="form-check-input" type="checkbox" name="{{ s.key }}_remove" id="rm_{{ s.key }}">
+          <label class="form-check-label" for="rm_{{ s.key }}">Remove</label></div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    <div class="col-12"><button class="btn btn-primary">Save settings</button></div>
+  </div>
+</form>
+{% endblock %}

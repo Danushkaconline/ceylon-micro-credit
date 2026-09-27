@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ inq.full_name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('admin.inquiries') }}" class="small">&larr; All applications</a>
+<h3 class="my-3">{{ 'Loan application' if inq.kind == 'application' else 'Contact message' }} #{{ inq.id }}</h3>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="admin-card">
+      <dl class="row mb-0">
+        <dt class="col-sm-4">Received</dt><dd class="col-sm-8">{{ inq.created_at.strftime('%Y-%m-%d %H:%M') }}</dd>
+        <dt class="col-sm-4">Name</dt><dd class="col-sm-8">{{ inq.full_name }}</dd>
+        {% if inq.nic %}<dt class="col-sm-4">NIC</dt><dd class="col-sm-8">{{ inq.nic }}</dd>{% endif %}
+        <dt class="col-sm-4">Phone</dt><dd class="col-sm-8"><a href="tel:{{ inq.phone|tel }}">{{ inq.phone }}</a></dd>
+        {% if inq.email %}<dt class="col-sm-4">Email</dt><dd class="col-sm-8"><a href="mailto:{{ inq.email }}">{{ inq.email }}</a></dd>{% endif %}
+        {% if inq.address %}<dt class="col-sm-4">Address</dt><dd class="col-sm-8">{{ inq.address }}</dd>{% endif %}
+        {% if inq.product %}<dt class="col-sm-4">Product</dt><dd class="col-sm-8">{{ inq.product.category.name }} - {{ inq.product.name }}</dd>{% endif %}
+        {% if inq.amount %}<dt class="col-sm-4">Amount</dt><dd class="col-sm-8">{{ inq.amount|rs }}</dd>{% endif %}
+        {% if inq.term_months %}<dt class="col-sm-4">Period</dt><dd class="col-sm-8">{{ inq.term_months }} months</dd>{% endif %}
+        <dt class="col-sm-4">Message</dt><dd class="col-sm-8" style="white-space:pre-line">{{ inq.message or '-' }}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <form method="post" class="admin-card">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <label class="form-label fw-semibold">Status</label>
+      <select name="status" class="form-select mb-3">
+        {% for s in statuses %}<option {{ 'selected' if inq.status == s }}>{{ s }}</option>{% endfor %}
+      </select>
+      <label class="form-label fw-semibold">Internal note</label>
+      <textarea name="admin_note" rows="5" class="form-control mb-3">{{ inq.admin_note }}</textarea>
+      <button class="btn btn-primary">Save</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

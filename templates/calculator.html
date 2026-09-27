@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header, calculator_widget %}
+{% block title %}Loan Calculator | {{ site.company_name }}{% endblock %}
+{% block content %}
+{{ page_header("Loan Calculator", "Estimate your monthly instalment in seconds", image=site.img_calculator) }}
+<section class="section">
+  <div class="container">{{ calculator_widget(products, selected) }}</div>
+</section>
+{% endblock %}
+{% block scripts %}<script>initCalculator("{{ url_for('public.apply') }}");</script>{% endblock %}

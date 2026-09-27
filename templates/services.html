@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header, product_card %}
+{% block title %}Our Services | {{ site.company_name }}{% endblock %}
+{% block content %}
+{{ page_header("Our Services", "Loans and leasing for every stage of your journey", image=site.img_services) }}
+{% for cat in categories %}
+<section class="section {{ 'bg-soft' if loop.index is even }}">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow"><i class="bi {{ cat.icon }}"></i> {{ cat.name }}</span>
+      <h2>{{ cat.tagline }}</h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+      {% for p in cat.active_products %}<div class="col-md-6 col-lg-5">{{ product_card(p) }}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

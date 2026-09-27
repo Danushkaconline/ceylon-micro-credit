@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% from "admin/_form.html" import field, checkbox, icon_help, image_field %}
+{% block title %}{{ prod.name or 'New product' }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('admin.products') }}" class="small">&larr; Products</a>
+<h3 class="my-3">{{ 'Edit ' ~ prod.name if prod.id else 'New product' }}</h3>
+<form method="post" enctype="multipart/form-data" class="admin-card">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Category *</label>
+      <select name="category_id" class="form-select" required>
+        {% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if prod.category_id == c.id }}>{{ c.name }}</option>{% endfor %}
+      </select>
+    </div>
+    {{ field("name", "Product name", prod.name, required=true, col="col-md-6") }}
+    {{ field("slug", "URL name", prod.slug, help="Leave empty to create automatically from the name.", col="col-md-6") }}
+    {{ field("icon", "Icon", prod.icon, help=icon_help(), col="col-md-6") }}
+    {{ field("short_description", "Short description (shown on cards)", prod.short_description) }}
+    {{ field("description", "Full description", prod.description, type="textarea") }}
+    {{ field("features", "Key features (one per line)", prod.features, type="textarea", col="col-md-6") }}
+    {{ field("requirements", "Documents required (one per line)", prod.requirements, type="textarea", col="col-md-6") }}
+    {{ field("min_amount", "Minimum amount (Rs.)", prod.min_amount, type="number", col="col-md-3") }}
+    {{ field("max_amount", "Maximum amount (Rs.)", prod.max_amount, type="number", col="col-md-3") }}
+    {{ field("interest_rate", "Interest rate (% p.a.)", prod.interest_rate, type="number", col="col-md-3") }}
+    {{ field("max_term_months", "Max term (months)", prod.max_term_months, type="number", col="col-md-3") }}
+    {{ field("sort_order", "Display order", prod.sort_order or 0, type="number", col="col-md-3") }}
+    {{ image_field("image", prod.image) }}
+    {{ checkbox("is_active", "Show on website", prod.is_active) }}
+    <div class="col-12"><button class="btn btn-primary">Save product</button></div>
+  </div>
+</form>
+{% endblock %}

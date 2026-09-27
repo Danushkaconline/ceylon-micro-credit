@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header, product_card %}
+{% block title %}{{ product.name }} | {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ product.short_description }}{% endblock %}
+{% block content %}
+{{ page_header(product.name, product.short_description,
+   [(product.category.name, url_for('public.category', slug=product.category.slug))],
+   image=product.category.image) }}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="icon-circle"><i class="bi {{ product.icon }}"></i></div>
+          <h2 class="mb-0">{{ product.name }}</h2>
+        </div>
+        {% if product.image %}<img src="{{ product.image|img }}" alt="{{ product.name }}" class="product-hero-img">{% endif %}
+        {% for para in product.description.splitlines() if para.strip() %}<p class="lead-sm">{{ para }}</p>{% endfor %}
+
+        {% if product.feature_list %}
+        <h4 class="mt-4">Key features</h4>
+        <ul class="check-list">{% for f in product.feature_list %}<li>{{ f }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        {% if product.requirement_list %}
+        <h4 class="mt-4">Documents required</h4>
+        <ul class="doc-list">{% for r in product.requirement_list %}<li><i class="bi bi-file-earmark-text"></i> {{ r }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-4">
+        <div class="side-card sticky-lg-top" style="top: 100px">
+          <h5>At a glance</h5>
+          <dl class="glance">
+            {% if product.min_amount or product.max_amount %}
+            <dt>Loan amount</dt><dd>{{ product.min_amount|rs }} - {{ product.max_amount|rs }}</dd>
+            {% endif %}
+            {% if product.max_term_months %}<dt>Repayment period</dt><dd>Up to {{ product.max_term_months }} months</dd>{% endif %}
+            {% if product.interest_rate %}<dt>Rates from</dt><dd>{{ '%g'|format(product.interest_rate) }}% p.a.*</dd>{% endif %}
+          </dl>
+          <a href="{{ url_for('public.apply', product=product.slug) }}" class="btn btn-accent w-100 mb-2">Apply for {{ product.name }}</a>
+          <a href="{{ url_for('public.calculator', product=product.slug) }}" class="btn btn-outline-primary w-100 mb-2"><i class="bi bi-calculator"></i> Calculate instalment</a>
+          <a href="tel:{{ site.phone|tel }}" class="btn btn-light w-100"><i class="bi bi-telephone"></i> {{ site.phone }}</a>
+          <p class="small text-muted mt-3 mb-0">* Rates are indicative and subject to credit evaluation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-title"><h2>Other {{ product.category.name }}</h2></div>
+    <div class="row g-4 justify-content-center">
+      {% for p in related %}<div class="col-md-6 col-lg-5">{{ product_card(p) }}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

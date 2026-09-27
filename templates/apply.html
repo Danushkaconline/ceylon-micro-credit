@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}Apply Online | {{ site.company_name }}{% endblock %}
+{% block cta %}{% endblock %}
+{% block content %}
+{{ page_header("Apply Online", "Fill in the form and our officer will contact you within one working day", image=site.img_apply) }}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-8">
+        <form method="post" class="side-card" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Loan / leasing type *</label>
+              <select name="product_id" class="form-select" required>
+                <option value="">-- Select --</option>
+                {% for p in products %}
+                <option value="{{ p.id }}" {{ 'selected' if form.product_id == p.id|string }}>{{ p.category.name }} - {{ p.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-8"><label class="form-label">Full name *</label>
+              <input name="full_name" class="form-control" value="{{ form.full_name }}" required maxlength="120"></div>
+            <div class="col-md-4"><label class="form-label">NIC number</label>
+              <input name="nic" class="form-control" value="{{ form.nic }}" maxlength="20"></div>
+            <div class="col-md-6"><label class="form-label">Mobile number *</label>
+              <input name="phone" type="tel" class="form-control" value="{{ form.phone }}" required maxlength="30" placeholder="07X XXX XXXX"></div>
+            <div class="col-md-6"><label class="form-label">Email</label>
+              <input name="email" type="email" class="form-control" value="{{ form.email }}" maxlength="120"></div>
+            <div class="col-12"><label class="form-label">Address</label>
+              <input name="address" class="form-control" value="{{ form.address }}" maxlength="255"></div>
+            <div class="col-md-6"><label class="form-label">Required amount (Rs.)</label>
+              <input name="amount" type="number" min="0" class="form-control" value="{{ form.amount }}"></div>
+            <div class="col-md-6"><label class="form-label">Repayment period (months)</label>
+              <input name="term_months" type="number" min="1" max="120" class="form-control" value="{{ form.term_months }}"></div>
+            <div class="col-12"><label class="form-label">Tell us about your business / purpose</label>
+              <textarea name="message" rows="4" class="form-control">{{ form.message }}</textarea></div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="consent" required>
+                <label class="form-check-label small" for="consent">I agree to be contacted by {{ site.company_name }} regarding this application.</label>
+              </div>
+            </div>
+            <div class="col-12"><button class="btn btn-accent btn-lg px-5">Submit Application</button></div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-4">
+        <div class="side-card mb-4">
+          <h5><i class="bi bi-info-circle text-primary"></i> What happens next?</h5>
+          <ol class="small ps-3 mb-0">
+            <li>We review your request.</li>
+            <li>An officer calls you to confirm details.</li>
+            <li>You submit documents at our office or to the field officer.</li>
+            <li>Funds are released once approved.</li>
+          </ol>
+        </div>
+        <div class="side-card">
+          <h5>Prefer to talk?</h5>
+          <p class="mb-2"><i class="bi bi-telephone-fill text-primary"></i> <a href="tel:{{ site.phone|tel }}">{{ site.phone }}</a></p>
+          <p class="mb-0"><i class="bi bi-geo-alt-fill text-primary"></i> {{ site.address }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+  if (!this.checkValidity()) { e.preventDefault(); this.classList.add("was-validated"); }
+});
+</script>
+{% endblock %}

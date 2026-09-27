@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_card, news_card, calculator_widget %}
+{% block content %}
+
+<!-- 1. Hero slider (edit slides in Admin > Home Slides) -->
+<div id="heroSlider" class="carousel slide carousel-fade hero-slider" data-bs-ride="carousel" data-bs-interval="6000">
+  {% if slides|length > 1 %}
+  <div class="carousel-indicators">
+    {% for s in slides %}
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="{{ loop.index0 }}" class="{{ 'active' if loop.first }}" aria-label="Slide {{ loop.index }}"></button>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="carousel-inner">
+    {% for s in slides %}
+    <div class="carousel-item {{ 'active' if loop.first }}">
+      <div class="hero-slide {{ 'has-image' if s.image }}" {% if s.image %}style="background-image:url('{{ s.image|img }}')"{% endif %}>
+        {% if not s.image %}<div class="shape"></div>{% endif %}
+        <div class="container">
+          {% if s.eyebrow %}<span class="hero-eyebrow">{{ s.eyebrow }}</span>{% endif %}
+          <h1>{{ s.title }}</h1>
+          <p>{{ s.text }}</p>
+          <div class="d-flex gap-2 flex-wrap mt-4">
+            {% if s.button_text %}<a href="{{ s.button_link or '#' }}" class="btn btn-primary btn-lg">{{ s.button_text }} <i class="bi bi-arrow-right"></i></a>{% endif %}
+            <a href="tel:{{ site.phone|tel }}" class="btn btn-outline-light btn-lg"><i class="bi bi-telephone-fill"></i> {{ site.phone }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="carousel-item active"><div class="hero-slide"><div class="shape"></div><div class="container">
+      <h1>{{ site.hero_title }}</h1><p>{{ site.hero_text }}</p>
+      <a href="{{ url_for('public.apply') }}" class="btn btn-primary btn-lg mt-3">Apply Now</a>
+    </div></div></div>
+    {% endfor %}
+  </div>
+  {% if slides|length > 1 %}
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></button>
+  {% endif %}
+</div>
+
+<!-- 2. About us -->
+<section class="section">
+  <div class="container">
+    <div class="row g-4 g-lg-5 align-items-center">
+      <div class="col-lg-7 about-block">
+        <span class="eyebrow">About Us</span>
+        <h2>More Than Finance, <span>A Partner in Your Growth</span></h2>
+        <p class="lead text-muted">{{ site.tagline }}</p>
+        <p>{{ site.about_short }}</p>
+        <ul class="about-points">
+          {% for cat in nav_categories %}<li><i class="bi {{ cat.icon }}"></i> {{ cat.name }}</li>{% endfor %}
+          <li><i class="bi bi-geo-alt-fill"></i> {{ site.address }}</li>
+        </ul>
+        <a href="{{ url_for('public.about') }}" class="btn btn-primary mt-2">Learn More <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="col-lg-5">
+        {% if site.img_about_home %}
+        <div class="about-photo">
+          <img src="{{ site.img_about_home|img }}" alt="{{ site.company_name }} customer" loading="lazy">
+          <div class="about-badge"><strong>{{ site.stat_years }}+</strong><span>Years serving<br>the community</span></div>
+        </div>
+        {% else %}
+        <div class="about-visual">
+          <div class="big">{{ site.stat_years }}+</div>
+          <p class="mb-0 fs-5">Years serving the community</p>
+          <ul>
+            {% for cat in nav_categories %}<li><i class="bi {{ cat.icon }}"></i> {{ cat.name }}</li>{% endfor %}
+            <li><i class="bi bi-geo-alt-fill"></i> {{ site.address }}</li>
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Products -->
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Our Products</span>
+      <h2>What We're <span>Offering</span></h2>
+      <p>Business loans, micro leasing and micro group loans - finance solutions built for Sri Lankan entrepreneurs.</p>
+    </div>
+    <div class="row g-4">
+      {% for p in products %}
+      <div class="col-md-6 col-lg-4">{{ product_card(p, show_category=true) }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 4. Highlights -->
+<section class="section highlights">
+  <div class="container">
+    <div class="row g-4">
+      {% for key, icon in [('highlight_1', 'bi-lightning-charge-fill'), ('highlight_2', 'bi-people-fill'), ('highlight_3', 'bi-shield-check')] %}
+      {% set parts = (site[key] or '').split('|', 1) %}
+      <div class="col-md-4">
+        <div class="highlight">
+          <i class="bi {{ icon }}"></i>
+          <h5>{{ parts[0]|trim }}</h5>
+          <p>{{ parts[1]|trim if parts|length > 1 }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 5. Values -->
+<section class="section">
+  <div class="container text-center">
+    <div class="section-title mb-4">
+      <span class="eyebrow">What Drives Us</span>
+      <h2>Our <span>Values</span></h2>
+    </div>
+    <div>
+      {% for v in (site['values'] or '').split(',') if v.strip() %}
+      <span class="value-chip"><i class="bi bi-check-circle-fill"></i> {{ v.strip() }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 6. Counters -->
+<section class="counters">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-6 col-md-3 counter"><strong><span data-count="{{ site.stat_years }}">0</span>+</strong><span>Yrs of Experience</span></div>
+      <div class="col-6 col-md-3 counter"><strong><span data-count="{{ site.stat_customers }}">0</span>+</strong><span>Clients Helped</span></div>
+      <div class="col-6 col-md-3 counter"><strong>Rs. <span data-count="{{ site.stat_disbursed }}">0</span>M+</strong><span>Loans Disbursed</span></div>
+      <div class="col-6 col-md-3 counter"><strong><span data-count="{{ site.stat_products }}">0</span></strong><span>Loan Products</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Calculator -->
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Calculate Your Rate</span>
+      <h2>Estimate Your <span>Monthly Payment</span></h2>
+      <p>Use our loan calculator to estimate your monthly instalments. Plan your finances with confidence and find the option that fits your needs.</p>
+    </div>
+    {{ calculator_widget(products) }}
+  </div>
+</section>
+
+<!-- 8. Latest news -->
+{% if news %}
+<section class="section">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <div><span class="eyebrow">News &amp; Events</span><h2 class="fw-bold mb-0">Our Latest <span class="text-red">News</span></h2></div>
+      <a href="{{ url_for('public.news_list') }}" class="btn btn-outline-primary">View All News</a>
+    </div>
+    <div class="row g-4">
+      {% for n in news %}<div class="col-md-6 col-lg-4">{{ news_card(n) }}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script>initCalculator("{{ url_for('public.apply') }}"); initCounters();</script>{% endblock %}

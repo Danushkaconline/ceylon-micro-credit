@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="mb-0">Products</h3>
+  <a href="{{ url_for('admin.product_form') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add product</a>
+</div>
+{% for cat in categories %}
+<div class="admin-card mb-4">
+  <div class="d-flex justify-content-between mb-2">
+    <h5 class="mb-0"><i class="bi {{ cat.icon }} text-red"></i> {{ cat.name }} {% if not cat.is_active %}<span class="badge bg-secondary">Hidden</span>{% endif %}</h5>
+    <a href="{{ url_for('admin.product_form', category=cat.id) }}" class="small">+ Add to {{ cat.name }}</a>
+  </div>
+  <table class="table mb-0">
+    <thead><tr><th>Order</th><th>Name</th><th>Amount range</th><th>Rate</th><th>Max term</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for p in cat.products %}
+      <tr>
+        <td>{{ p.sort_order }}</td>
+        <td><i class="bi {{ p.icon }}"></i> {{ p.name }}</td>
+        <td class="small">{{ p.min_amount|rs }} - {{ p.max_amount|rs }}</td>
+        <td>{{ '%g'|format(p.interest_rate) }}%</td>
+        <td>{{ p.max_term_months }} m</td>
+        <td>{% if p.is_active %}<span class="badge bg-success">Live</span>{% else %}<span class="badge bg-secondary">Hidden</span>{% endif %}</td>
+        <td class="text-end text-nowrap">
+          <a href="{{ url_for('admin.product_form', prod_id=p.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <form method="post" action="{{ url_for('admin.product_delete', prod_id=p.id) }}" class="d-inline" data-confirm="Delete {{ p.name }}?">
+            <input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-dark">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="text-muted">No products yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+{% endblock %}

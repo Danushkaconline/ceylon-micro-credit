@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Dashboard</h3>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><a href="{{ url_for('admin.inquiries', status='New') }}" class="kpi d-block text-dark"><small class="text-muted">New (unhandled)</small><strong class="text-red">{{ stats.new }}</strong></a></div>
+  <div class="col-6 col-lg-3"><a href="{{ url_for('admin.inquiries', kind='application') }}" class="kpi d-block text-dark"><small class="text-muted">Loan applications</small><strong>{{ stats.applications }}</strong></a></div>
+  <div class="col-6 col-lg-3"><a href="{{ url_for('admin.inquiries', kind='contact') }}" class="kpi d-block text-dark"><small class="text-muted">Contact messages</small><strong>{{ stats.messages }}</strong></a></div>
+  <div class="col-6 col-lg-3"><a href="{{ url_for('admin.products') }}" class="kpi d-block text-dark"><small class="text-muted">Active products</small><strong>{{ stats.products }}</strong></a></div>
+</div>
+<div class="admin-card">
+  <div class="d-flex justify-content-between mb-3"><h5 class="mb-0">Latest applications &amp; messages</h5>
+    <a href="{{ url_for('admin.inquiries') }}">View all</a></div>
+  {% include "admin/_inquiry_table.html" %}
+</div>
+{% endblock %}

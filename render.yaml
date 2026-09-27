@@ -1,0 +1,31 @@
+# Render Blueprint: creates the website + a PostgreSQL database in one go.
+# Render dashboard -> New -> Blueprint -> pick this GitHub repository.
+services:
+  - type: web
+    name: ceylon-micro-credit
+    runtime: python
+    plan: free
+    region: singapore            # closest Render region to Sri Lanka
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --preload --workers 2 --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true      # Render creates a long random key
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false              # you type your own admin password when creating the Blueprint
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ceylon-micro-credit-db
+          property: connectionString
+
+databases:
+  - name: ceylon-micro-credit-db
+    plan: free                   # free database expires after 30 days - upgrade it before then
+    region: singapore
+    databaseName: ceylon_micro_credit
+    user: cmc

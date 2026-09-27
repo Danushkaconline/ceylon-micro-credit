@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}About Us | {{ site.company_name }}{% endblock %}
+{% block content %}
+{{ page_header("About Us", "Your trusted micro finance partner in " ~ site.city, image=site.img_about) }}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4 g-lg-5 align-items-center">
+      <div class="col-lg-7">
+        <span class="eyebrow">Who we are</span>
+        <h2 class="mb-3">{{ site.company_name }}</h2>
+        {% for para in site.about_text.splitlines() if para.strip() %}<p>{{ para }}</p>{% endfor %}
+      </div>
+      <div class="col-lg-5">
+        {% if site.img_about_home %}<img src="{{ site.img_about_home|img }}" alt="{{ site.company_name }} customer" class="img-fluid rounded-3 shadow mb-3 about-side-img" loading="lazy">{% endif %}
+        <div class="mv-card mb-3"><i class="bi bi-bullseye"></i><div><h5>Our Mission</h5><p class="mb-0">{{ site.mission }}</p></div></div>
+        <div class="mv-card"><i class="bi bi-eye"></i><div><h5>Our Vision</h5><p class="mb-0">{{ site.vision }}</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-title"><span class="eyebrow">What we offer</span><h2>Our services</h2></div>
+    <div class="row g-4">
+      {% for cat in nav_categories %}
+      <div class="col-md-4">
+        <a href="{{ url_for('public.category', slug=cat.slug) }}" class="category-tile {{ 'with-img' if cat.image }}">
+          {% if cat.image %}<img src="{{ cat.image|img }}" alt="{{ cat.name }}" loading="lazy">{% endif %}
+          <i class="bi {{ cat.icon }}"></i>
+          <h5>{{ cat.name }}</h5>
+          <p>{{ cat.active_products|map(attribute='name')|join(' · ') }}</p>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title"><span class="eyebrow">Our values</span><h2>What we stand for</h2></div>
+    <div class="row g-4">
+      {% for icon, title, text in [
+        ('bi-hand-thumbs-up', 'Integrity', 'Honest advice and transparent terms for every customer.'),
+        ('bi-heart', 'Care', 'We treat customers like family and support them in hard times.'),
+        ('bi-graph-up-arrow', 'Growth', 'We succeed only when our customers grow.'),
+        ('bi-shield-lock', 'Responsibility', 'Responsible lending that never over-burdens a borrower.'),
+      ] %}
+      <div class="col-sm-6 col-lg-3"><div class="feature-box"><i class="bi {{ icon }}"></i><h5>{{ title }}</h5><p>{{ text }}</p></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

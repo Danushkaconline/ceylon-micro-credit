@@ -1,0 +1,102 @@
+{# Reusable pieces. Import with: {% from "_macros.html" import product_card, page_header %} #}
+
+{% macro page_header(title, subtitle="", crumbs=[], image="") %}
+<section class="page-header {{ 'has-image' if image }}" {% if image %}style="background-image:url('{{ image|img }}')"{% endif %}>
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('public.home') }}">Home</a></li>
+        {% for label, link in crumbs %}
+          <li class="breadcrumb-item"><a href="{{ link }}">{{ label }}</a></li>
+        {% endfor %}
+        <li class="breadcrumb-item active">{{ title }}</li>
+      </ol>
+    </nav>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="lead mb-0">{{ subtitle }}</p>{% endif %}
+  </div>
+</section>
+{% endmacro %}
+
+{% macro product_card(p, show_category=false) %}
+<div class="card product-card h-100">
+  {% if p.image %}
+  <a href="{{ url_for('public.product', slug=p.slug) }}" class="product-img">
+    <img src="{{ p.image|img }}" alt="{{ p.name }}" loading="lazy">
+  </a>
+  {% endif %}
+  <div class="card-body">
+    <div class="icon-circle {{ 'on-image' if p.image }}"><i class="bi {{ p.icon }}"></i></div>
+    {% if show_category %}<div class="cat-label">{{ p.category.name }}</div>{% endif %}
+    <h5 class="card-title">{{ p.name }}</h5>
+    <p class="card-text text-muted">{{ p.short_description }}</p>
+    {% if p.max_amount %}
+    <ul class="list-unstyled product-meta">
+      <li><i class="bi bi-cash-stack"></i> Up to {{ p.max_amount|rs }}</li>
+      {% if p.max_term_months %}<li><i class="bi bi-calendar3"></i> Up to {{ p.max_term_months }} months</li>{% endif %}
+    </ul>
+    {% endif %}
+  </div>
+  <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4 d-flex gap-2">
+    <a href="{{ url_for('public.product', slug=p.slug) }}" class="btn btn-outline-primary btn-sm">Learn more</a>
+    <a href="{{ url_for('public.apply', product=p.slug) }}" class="btn btn-primary btn-sm">Apply</a>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro news_card(n) %}
+<div class="news-card">
+  <a href="{{ url_for('public.news_detail', slug=n.slug) }}" class="d-block">
+    <div class="news-thumb" {% if n.image %}style="background-image:url('{{ n.image|img }}')"{% endif %}>
+      {% if not n.image %}<i class="bi bi-newspaper"></i>{% endif %}
+    </div>
+  </a>
+  <div class="card-body">
+    <div class="news-date">{{ n.published_on.strftime('%B %d, %Y') if n.published_on }}</div>
+    <h5 class="mt-2"><a href="{{ url_for('public.news_detail', slug=n.slug) }}">{{ n.title }}</a></h5>
+    <p class="text-muted small mb-2">{{ n.summary }}</p>
+    <a href="{{ url_for('public.news_detail', slug=n.slug) }}" class="fw-semibold small">Read More &raquo;</a>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro calculator_widget(products, selected="") %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="side-card h-100">
+      <label class="form-label fw-semibold">Loan / leasing type</label>
+      <select id="calcProduct" class="form-select mb-4">
+        {% for p in products %}
+        <option value="{{ p.slug }}" data-rate="{{ p.interest_rate }}" data-min="{{ p.min_amount }}"
+                data-max="{{ p.max_amount }}" data-term="{{ p.max_term_months }}"
+                {{ 'selected' if p.slug == selected }}>{{ p.category.name }} - {{ p.name }}</option>
+        {% endfor %}
+      </select>
+
+      <div class="d-flex justify-content-between align-items-center"><label class="form-label fw-semibold mb-0">Loan amount (Rs.)</label>
+        <input id="calcAmountText" type="number" class="form-control form-control-sm text-end" style="max-width:160px"></div>
+      <input id="calcAmount" type="range" class="form-range mb-4 mt-2" step="10000">
+
+      <div class="d-flex justify-content-between"><label class="form-label fw-semibold">Loan term (months)</label>
+        <strong id="calcTermLabel"></strong></div>
+      <input id="calcTerm" type="range" class="form-range mb-4" min="3" step="1">
+
+      <div class="d-flex justify-content-between align-items-center"><label class="form-label fw-semibold mb-0">Interest rate (% p.a.)</label>
+        <input id="calcRate" type="number" step="0.5" min="0" class="form-control form-control-sm text-end" style="max-width:100px"></div>
+      <p class="small text-muted mt-3 mb-0">Calculated on a reducing balance. This is an estimate only;
+        the final rate and instalment depend on credit evaluation.</p>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="result-card h-100 d-flex flex-column justify-content-center">
+      <span>Monthly payment</span>
+      <div id="calcEmi" class="emi">Rs. 0</div>
+      <div class="row text-center mt-4">
+        <div class="col"><small>Total interest paid</small><strong id="calcInterest">Rs. 0</strong></div>
+        <div class="col"><small>Total payable</small><strong id="calcTotal">Rs. 0</strong></div>
+      </div>
+      <a id="calcApply" href="{{ url_for('public.apply') }}" class="btn btn-primary btn-lg w-100 mt-4">Apply with these details</a>
+    </div>
+  </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header, product_card %}
+{% block title %}{{ category.name }} | {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ category.description }}{% endblock %}
+{% block content %}
+{{ page_header(category.name, category.tagline, [("Services", url_for('public.services'))], image=category.image) }}
+<section class="section">
+  <div class="container">
+    <p class="lead text-center mx-auto mb-5" style="max-width: 760px">{{ category.description }}</p>
+    <div class="row g-4 justify-content-center">
+      {% for p in category.active_products %}
+      <div class="col-md-6 col-lg-5">{{ product_card(p) }}</div>
+      {% else %}
+      <p class="text-center text-muted">New products coming soon. Please call us for details.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

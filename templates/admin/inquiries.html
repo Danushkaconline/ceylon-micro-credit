@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% block title %}Applications{% endblock %}
+{% block content %}
+<h3 class="mb-4">Applications &amp; Messages</h3>
+<form class="admin-card mb-3 d-flex gap-2 flex-wrap align-items-end" method="get">
+  <div><label class="form-label small mb-1">Type</label>
+    <select name="kind" class="form-select form-select-sm">
+      <option value="">All</option>
+      <option value="application" {{ 'selected' if kind == 'application' }}>Applications</option>
+      <option value="contact" {{ 'selected' if kind == 'contact' }}>Messages</option>
+    </select></div>
+  <div><label class="form-label small mb-1">Status</label>
+    <select name="status" class="form-select form-select-sm">
+      <option value="">All</option>
+      {% for s in statuses %}<option {{ 'selected' if status == s }}>{{ s }}</option>{% endfor %}
+    </select></div>
+  <button class="btn btn-sm btn-primary">Filter</button>
+  <span class="ms-auto small text-muted">{{ items|length }} record(s)</span>
+</form>
+<div class="admin-card">{% include "admin/_inquiry_table.html" %}</div>
+{% endblock %}

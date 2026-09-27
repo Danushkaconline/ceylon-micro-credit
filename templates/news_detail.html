@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ item.title }} | {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ item.summary }}{% endblock %}
+{% block content %}
+{{ page_header(item.title, "", [("News", url_for('public.news_list'))], image=site.img_news) }}
+<section class="section">
+  <div class="container" style="max-width: 860px">
+    <div class="news-date mb-3"><i class="bi bi-calendar3"></i> {{ item.published_on.strftime('%B %d, %Y') if item.published_on }}</div>
+    {% if item.image %}<img src="{{ item.image|img }}" alt="{{ item.title }}" class="news-hero-img">{% endif %}
+    {% if item.summary %}<p class="lead">{{ item.summary }}</p>{% endif %}
+    {% for para in item.body.splitlines() if para.strip() %}<p>{{ para }}</p>{% endfor %}
+    <a href="{{ url_for('public.news_list') }}" class="btn btn-outline-primary mt-3"><i class="bi bi-arrow-left"></i> All news</a>
+  </div>
+</section>
+{% endblock %}

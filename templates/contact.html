@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}Contact Us | {{ site.company_name }}{% endblock %}
+{% block cta %}{% endblock %}
+{% block content %}
+{{ page_header("Contact Us", "We'd love to hear from you", image=site.img_contact) }}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4 mb-5">
+      <div class="col-md-4"><div class="contact-box"><i class="bi bi-geo-alt-fill"></i><h6>Visit us</h6><p>{{ site.address }}</p></div></div>
+      <div class="col-md-4"><div class="contact-box"><i class="bi bi-telephone-fill"></i><h6>Call us</h6><p><a href="tel:{{ site.phone|tel }}">{{ site.phone }}</a></p></div></div>
+      <div class="col-md-4"><div class="contact-box"><i class="bi bi-clock-fill"></i><h6>Opening hours</h6><p>{{ site.hours }}</p></div></div>
+    </div>
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-6">
+        <h3 class="mb-3">Send us a message</h3>
+        <form method="post" class="side-card">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <div class="mb-3"><label class="form-label">Your name *</label>
+            <input name="full_name" class="form-control" value="{{ form.full_name }}" required maxlength="120"></div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Phone *</label>
+              <input name="phone" type="tel" class="form-control" value="{{ form.phone }}" required maxlength="30"></div>
+            <div class="col-md-6"><label class="form-label">Email</label>
+              <input name="email" type="email" class="form-control" value="{{ form.email }}" maxlength="120"></div>
+          </div>
+          <div class="mb-3"><label class="form-label">Message *</label>
+            <textarea name="message" rows="5" class="form-control" required>{{ form.message }}</textarea></div>
+          <button class="btn btn-primary btn-lg">Send Message</button>
+        </form>
+      </div>
+      <div class="col-lg-6">
+        <div class="map-wrap">
+          <iframe title="Office location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q={{ site.map_embed|urlencode }}&output=embed"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,5 +1,10 @@
 """Admin panel: edit content, products and view applications. URL: /admin"""
+import getpass
+import hashlib
+import os
 import re
+import subprocess
+import sys
 from datetime import date
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
@@ -359,3 +364,51 @@ def news_delete(news_id):
         db.session.commit()
         flash("News item deleted.", "success")
     return redirect(url_for("admin.news"))
+
+
+# --- Update the live website from GitHub -------------------------------------
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def _git(*args):
+    result = subprocess.run(["git", *args], cwd=APP_DIR, capture_output=True, text=True, timeout=120)
+    return (result.stdout + result.stderr).strip()
+
+
+def _file_hash(name):
+    try:
+        with open(os.path.join(APP_DIR, name), "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()
+    except OSError:
+        return ""
+
+
+def _wsgi_file():
+    """PythonAnywhere reloads the website when its WSGI file is touched."""
+    path = os.environ.get("WSGI_FILE") or f"/var/www/{getpass.getuser()}_pythonanywhere_com_wsgi.py"
+    return path if os.path.exists(path) else ""
+
+
+@admin_bp.route("/update", methods=["GET", "POST"])
+@login_required
+def update_site():
+    output = ""
+    if request.method == "POST":
+        before = _file_hash("requirements.txt")
+        output = _git("pull", "--ff-only", "origin", "main")
+        if _file_hash("requirements.txt") != before:
+            pip = os.path.join(sys.prefix, "bin", "pip")
+            if os.path.exists(pip):
+                r = subprocess.run([pip, "install", "-q", "-r", "requirements.txt"], cwd=APP_DIR,
+                                   capture_output=True, text=True, timeout=600)
+                output += "\n\n[pip] " + ((r.stdout + r.stderr).strip() or "packages updated")
+        wsgi = _wsgi_file()
+        if wsgi and "Already up to date" not in output:
+            os.utime(wsgi, None)
+            flash("Website updated from GitHub and reloaded. Refresh the site in a few seconds.", "success")
+        elif "Already up to date" in output:
+            flash("Already up to date - no new changes on GitHub.", "info")
+        else:
+            flash("Code updated. Restart the server (python app.py) to see the changes.", "warning")
+    current = _git("log", "-1", "--format=%h  %ad  %s", "--date=format:%Y-%m-%d %H:%M")
+    return render_template("admin/update.html", current=current, output=output, is_live=bool(_wsgi_file()))

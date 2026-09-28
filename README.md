@@ -101,3 +101,18 @@ Things to know about the free plan:
   before then, or loan applications and admin changes will be lost.
 - Images uploaded from the admin panel are stored in the database, so they survive restarts.
 - To use your own domain (e.g. ceylonmicrocredit.lk): Render → the web service → Settings → Custom Domains.
+
+## Live website (PythonAnywhere) and updating it
+
+Live site: https://ceylonmicrocredit.pythonanywhere.com (admin: `/admin`).
+
+Keep the local copy and the live site the same:
+
+1. Change and test on your computer: `python app.py` → http://localhost:5090
+2. Double-click **`deploy.bat`**, type a short description, press Enter (sends the changes to GitHub)
+3. On the live Admin panel click **Update Website → Update from GitHub** (deploy.bat opens that page for you)
+
+Only code, design and default photos travel this way. Products, settings, applications and uploads
+edited in each Admin panel stay separate (local database = test data, live database = real data).
+
+PythonAnywhere free plan: log in once a month and click **Run until 1 month from today** on the Web tab.

@@ -47,6 +47,7 @@
       ('admin.news', 'bi-newspaper', 'News & Events', 'admin.news'),
       ('admin.settings', 'bi-gear', 'Site Settings', 'admin.settings'),
       ('admin.password', 'bi-key', 'Change Password', 'admin.password'),
+      ('admin.update_site', 'bi-cloud-arrow-down', 'Update Website', 'admin.update_site'),
     ] %}
     <a class="nav-link {{ 'active' if ep.startswith(match) }}" href="{{ url_for(endpoint) }}"><i class="bi {{ icon }}"></i>{{ label }}</a>
     {% endfor %}

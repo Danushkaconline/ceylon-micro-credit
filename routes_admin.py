@@ -405,7 +405,7 @@ def update_site():
         wsgi = _wsgi_file()
         if wsgi and "Already up to date" not in output:
             os.utime(wsgi, None)
-            flash("Website updated from GitHub and reloaded. Refresh the site in a few seconds.", "success")
+            flash("Website updated from GitHub. Changes appear within about a minute - if not, click Reload on the PythonAnywhere Web tab.", "success")
         elif "Already up to date" in output:
             flash("Already up to date - no new changes on GitHub.", "info")
         else:

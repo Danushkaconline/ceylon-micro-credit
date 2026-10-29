@@ -1,4 +1,4 @@
-"""Ceylon Micro Credit website - run with:  python app.py"""
+"""Nexora Credit and Properties website - run with:  python app.py"""
 import os
 import secrets
 

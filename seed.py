@@ -25,19 +25,20 @@ IMAGES = {key: photo(key) for key in IMAGE_KEYS}
 
 SETTINGS = [
     # key, label, value
-    ("company_name", "Company name", "Ceylon Micro Credit"),
+    ("company_name", "Company name", "Nexora Credit and Properties"),
+    ("brand_initials", "Initials shown when there is no logo", "NC"),
     ("tagline", "Tagline", "Small loans. Big dreams."),
     ("address", "Address", "62, Jaya Mawatha, Kadawatha"),
     ("city", "City / Branch", "Kadawatha"),
     ("phone", "Telephone", "011-2224578"),
-    ("email", "Email", "info@ceylonmicrocredit.lk"),
+    ("email", "Email", "info@nexoracredit.lk"),
     ("hours", "Opening hours", "Mon - Fri 8.30 AM - 5.00 PM | Sat 8.30 AM - 1.00 PM"),
     ("hero_title", "Home banner title", "Finance that grows with your business"),
     ("hero_text", "Home banner text",
      "Business loans, micro leasing and group loans designed for Sri Lankan entrepreneurs, "
      "families and self-employed people. Fast approval, simple documents and friendly service from Kadawatha."),
     ("about_text", "About us text",
-     "Ceylon Micro Credit is a community-focused micro finance company based in Kadawatha. "
+     "Nexora Credit and Properties is a community-focused micro finance company based in Kadawatha. "
      "We help small business owners, self-employed people and women-led groups access fair, "
      "affordable credit so they can start, grow and protect their livelihoods.\n"
      "Our team believes in simple processes, transparent pricing and long-term relationships. "
@@ -48,7 +49,7 @@ SETTINGS = [
     ("facebook", "Facebook URL", ""),
     ("whatsapp", "WhatsApp number (e.g. 94112224578)", ""),
     ("about_short", "Home page 'About us' intro",
-     "Ceylon Micro Credit is a Kadawatha-based micro finance company helping small business owners, "
+     "Nexora Credit and Properties is a Kadawatha-based micro finance company helping small business owners, "
      "self-employed people and community groups access fair, affordable credit. Along with finance we "
      "offer friendly guidance so our customers can grow with confidence."),
     ("values", "Our values (comma separated)",
@@ -63,6 +64,7 @@ SETTINGS = [
     ("stat_customers", "Counter: clients helped", "5000"),
     ("stat_disbursed", "Counter: loans disbursed (Rs. millions)", "500"),
     ("stat_products", "Counter: loan products", "6"),
+    ("img_logo", "Image: Company logo (header)", ""),
     ("img_about_home", "Image: home page 'About us'", IMAGES["img_about_home"]),
     ("img_about", "Image: About Us page banner", IMAGES["img_about"]),
     ("img_services", "Image: Services page banner", IMAGES["img_services"]),
@@ -88,7 +90,7 @@ SLIDES = [
 ]
 
 NEWS = [
-    {"title": "Ceylon Micro Credit opens at Kadawatha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
+    {"title": "Nexora Credit and Properties opens at Kadawatha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
      "summary": "Our office at 62, Jaya Mawatha, Kadawatha is now open to serve customers in the area.",
      "body": "We are happy to welcome customers to our office at 62, Jaya Mawatha, Kadawatha.\n"
              "Visit us for business loans, micro leasing and group loans, or call 011-2224578."},
@@ -221,6 +223,27 @@ def seed_defaults(admin_username, admin_password):
     db.session.commit()
 
 
+def rename_company(old, new):
+    """Replace the old company name in every text stored in the database."""
+    count = 0
+    fields = {Setting: ["value"], Category: ["name", "tagline", "description"],
+              Product: ["short_description", "description", "features"],
+              Slide: ["eyebrow", "title", "text"], News: ["title", "summary", "body"]}
+    for model, cols in fields.items():
+        for item in model.query.all():
+            for col in cols:
+                value = getattr(item, col) or ""
+                if old in value:
+                    setattr(item, col, value.replace(old, new))
+                    count += 1
+    email = db.session.get(Setting, "email")
+    if email and email.value == "info@ceylonmicrocredit.lk":
+        email.value = "info@nexoracredit.lk"
+        count += 1
+    db.session.commit()
+    return count
+
+
 def fill_missing_images():
     """Give the default pictures to items that have no image yet (keeps your own images)."""
     count = 0
@@ -255,8 +278,13 @@ if __name__ == "__main__":
             db.create_all()
             seed_defaults(app.config["ADMIN_USERNAME"], app.config["ADMIN_PASSWORD"])
             print("Database reset with default content.")
+        elif "--rename" in sys.argv:
+            i = sys.argv.index("--rename")
+            old, new = sys.argv[i + 1], sys.argv[i + 2]
+            print(f"Renamed '{old}' -> '{new}' in {rename_company(old, new)} place(s).")
         elif "--images" in sys.argv:
             print(f"Added default images to {fill_missing_images()} item(s).")
         else:
             print("Use: python seed.py --images   (add default pictures to items without one)")
+            print('  or python seed.py --rename "Old name" "New name"')
             print("  or python seed.py --reset    (rebuild database - deletes all data!)")

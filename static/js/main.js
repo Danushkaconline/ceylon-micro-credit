@@ -1,4 +1,4 @@
-// Ceylon Micro Credit - site scripts
+// Nexora Credit and Properties - site scripts
 document.getElementById("year").textContent = new Date().getFullYear();
 
 function formatRs(n) {

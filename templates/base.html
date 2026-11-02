@@ -100,7 +100,7 @@
 <footer class="site-footer">
   <div class="container">
     <div class="row g-4">
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <h5 class="text-white">{{ site.company_name }}</h5>
         <p>{{ site.mission }}</p>
         <div class="social">
@@ -108,23 +108,25 @@
           {% if site.whatsapp %}<a href="https://wa.me/{{ site.whatsapp|tel }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>{% endif %}
         </div>
       </div>
-      <div class="col-6 col-lg-3">
-        <h6>Quick Links</h6>
+      {% for cat in nav_categories %}
+      <div class="col-6 col-md-4 col-lg">
+        <h6>{{ cat.name }}</h6>
         <ul class="list-unstyled">
-          <li><a href="{{ url_for('public.about') }}">About Us</a></li>
-          <li><a href="{{ url_for('public.services') }}">Our Services</a></li>
-          <li><a href="{{ url_for('public.calculator') }}">Loan Calculator</a></li>
-          <li><a href="{{ url_for('public.apply') }}">Apply Online</a></li>
-          <li><a href="{{ url_for('public.news_list') }}">News &amp; Events</a></li>
+          {% for p in cat.active_products %}
+          <li><a href="{{ url_for('public.product', slug=p.slug) }}">{{ p.name }}</a></li>
+          {% endfor %}
         </ul>
       </div>
-      <div class="col-12 col-lg-5">
+      {% endfor %}
+      <div class="col-12 col-lg-auto">
         <h6>Contact</h6>
         <ul class="list-unstyled footer-contact">
           <li><i class="bi bi-geo-alt"></i> {{ site.address }}</li>
           <li><a href="tel:{{ site.phone|tel }}"><i class="bi bi-telephone"></i> {{ site.phone }}</a></li>
           {% if site.email %}<li><a href="mailto:{{ site.email }}"><i class="bi bi-envelope"></i> {{ site.email }}</a></li>{% endif %}
-          <li><i class="bi bi-clock"></i> {{ site.hours }}</li>
+          {% for part in (site.hours or '').split('|') if part.strip() %}
+          <li><i class="bi bi-clock"></i> {{ part.strip() }}</li>
+          {% endfor %}
         </ul>
       </div>
     </div>

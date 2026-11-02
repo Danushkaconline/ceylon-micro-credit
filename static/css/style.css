@@ -287,4 +287,4 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; }
 }
 
 /* Footer contact details: one line each on desktop */
-@media (min-width: 992px) { .footer-contact li { white-space: nowrap; } }
+@media (min-width: 1200px) { .footer-contact li { white-space: nowrap; } }

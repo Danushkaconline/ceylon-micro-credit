@@ -1,6 +1,16 @@
 // Nexora Credit and Properties - site scripts
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Back-to-top arrow: show after scrolling down, scroll smoothly to the top on click
+(function () {
+  const btn = document.getElementById("backToTop");
+  if (!btn) return;
+  const toggle = () => btn.classList.toggle("show", window.scrollY > 400);
+  window.addEventListener("scroll", toggle, { passive: true });
+  btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  toggle();
+})();
+
 function formatRs(n) {
   return "Rs. " + Math.round(n).toLocaleString("en-LK");
 }

@@ -1,6 +1,6 @@
-# Ceylon Micro Credit – Website
+# Nexora Credit and Properties – Website
 
-Company website for **Ceylon Micro Credit**, 62, Jaya Mawatha, Kadawatha · Tel 011-2224578.
+Company website for **Nexora Credit and Properties**, 255/1 A, Colombo Road, Gampaha · Tel 071 224 1220.
 Built with **Python (Flask)**, **SQL (SQLAlchemy – SQLite by default, MySQL/SQL Server ready)** and a
 **Bootstrap 5** front end in the company colours: black, red and white.
 
@@ -63,7 +63,7 @@ To change a picture, upload your own photo or paste an image link:
 | About / Services / Calculator / Apply / Contact / News banners, home "About us" photo | Admin → Site Settings → Page images |
 | News photos | Admin → News & Events |
 
-Your own photos of the Kadawatha office, staff and real customers (with their permission) will always look best.
+Your own photos of the Gampaha office, staff and real customers (with their permission) will always look best.
 `python seed.py --images` restores the default photo on any item that has no picture.
 
 ## Common changes

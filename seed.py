@@ -28,28 +28,28 @@ SETTINGS = [
     ("company_name", "Company name", "Nexora Credit and Properties"),
     ("brand_initials", "Initials shown when there is no logo", "NC"),
     ("tagline", "Tagline", "Small loans. Big dreams."),
-    ("address", "Address", "62, Jaya Mawatha, Kadawatha"),
-    ("city", "City / Branch", "Kadawatha"),
-    ("phone", "Telephone", "011-2224578"),
+    ("address", "Address", "255/1 A, Colombo Road, Gampaha"),
+    ("city", "City / Branch", "Gampaha"),
+    ("phone", "Telephone", "071 224 1220"),
     ("email", "Email", "info@nexoracredit.lk"),
     ("hours", "Opening hours", "Mon - Fri 8.30 AM - 5.00 PM | Sat 8.30 AM - 1.00 PM"),
     ("hero_title", "Home banner title", "Finance that grows with your business"),
     ("hero_text", "Home banner text",
      "Business loans, micro leasing and group loans designed for Sri Lankan entrepreneurs, "
-     "families and self-employed people. Fast approval, simple documents and friendly service from Kadawatha."),
+     "families and self-employed people. Fast approval, simple documents and friendly service from Gampaha."),
     ("about_text", "About us text",
-     "Nexora Credit and Properties is a community-focused micro finance company based in Kadawatha. "
+     "Nexora Credit and Properties is a community-focused micro finance company based in Gampaha. "
      "We help small business owners, self-employed people and women-led groups access fair, "
      "affordable credit so they can start, grow and protect their livelihoods.\n"
      "Our team believes in simple processes, transparent pricing and long-term relationships. "
      "Every customer is served personally by an officer who understands the local community."),
     ("mission", "Mission", "To empower small businesses and families across Sri Lanka with fast, fair and responsible financial services."),
     ("vision", "Vision", "To be the most trusted micro finance partner for every growing community in Sri Lanka."),
-    ("map_embed", "Google Map search text", "62 Jaya Mawatha, Kadawatha, Sri Lanka"),
+    ("map_embed", "Google Map search text", "255/1 A, Colombo Road, Gampaha, Sri Lanka"),
     ("facebook", "Facebook URL", ""),
-    ("whatsapp", "WhatsApp number (e.g. 94112224578)", ""),
+    ("whatsapp", "WhatsApp number (e.g. 94712241220)", "94712241220"),
     ("about_short", "Home page 'About us' intro",
-     "Nexora Credit and Properties is a Kadawatha-based micro finance company helping small business owners, "
+     "Nexora Credit and Properties is a Gampaha-based micro finance company helping small business owners, "
      "self-employed people and community groups access fair, affordable credit. Along with finance we "
      "offer friendly guidance so our customers can grow with confidence."),
     ("values", "Our values (comma separated)",
@@ -57,7 +57,7 @@ SETTINGS = [
     ("highlight_1", "Highlight 1 (title | text)",
      "Fast & Simple Approval | Minimal paperwork and quick decisions - most applications are approved within 24-48 hours."),
     ("highlight_2", "Highlight 2 (title | text)",
-     "Experienced Local Team | Our officers know the Kadawatha community and give every customer personal attention."),
+     "Experienced Local Team | Our officers know the Gampaha community and give every customer personal attention."),
     ("highlight_3", "Highlight 3 (title | text)",
      "Transparent & Fair | Clear rates and instalments with no hidden charges - responsible lending you can trust."),
     ("stat_years", "Counter: years of experience", "10"),
@@ -90,10 +90,10 @@ SLIDES = [
 ]
 
 NEWS = [
-    {"title": "Nexora Credit and Properties opens at Kadawatha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
-     "summary": "Our office at 62, Jaya Mawatha, Kadawatha is now open to serve customers in the area.",
-     "body": "We are happy to welcome customers to our office at 62, Jaya Mawatha, Kadawatha.\n"
-             "Visit us for business loans, micro leasing and group loans, or call 011-2224578."},
+    {"title": "Nexora Credit and Properties opens at Gampaha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
+     "summary": "Our office at 255/1 A, Colombo Road, Gampaha is now open to serve customers in the area.",
+     "body": "We are happy to welcome customers to our office at 255/1 A, Colombo Road, Gampaha.\n"
+             "Visit us for business loans, micro leasing and group loans, or call 071 224 1220."},
     {"title": "Special three-wheeler leasing plans for hiring drivers", "slug": "three-wheeler-leasing-plans",
      "summary": "Flexible repayment plans that match the daily income of three-wheeler hiring drivers.",
      "body": "Our new three-wheeler leasing plans offer flexible instalments designed around the income of hiring drivers.\n"
@@ -278,13 +278,13 @@ if __name__ == "__main__":
             db.create_all()
             seed_defaults(app.config["ADMIN_USERNAME"], app.config["ADMIN_PASSWORD"])
             print("Database reset with default content.")
-        elif "--rename" in sys.argv:
-            i = sys.argv.index("--rename")
+        elif "--rename" in sys.argv or "--replace" in sys.argv:
+            i = sys.argv.index("--rename" if "--rename" in sys.argv else "--replace")
             old, new = sys.argv[i + 1], sys.argv[i + 2]
             print(f"Renamed '{old}' -> '{new}' in {rename_company(old, new)} place(s).")
         elif "--images" in sys.argv:
             print(f"Added default images to {fill_missing_images()} item(s).")
         else:
             print("Use: python seed.py --images   (add default pictures to items without one)")
-            print('  or python seed.py --rename "Old name" "New name"')
+            print('  or python seed.py --replace "Old text" "New text"   (address, phone, name...)')
             print("  or python seed.py --reset    (rebuild database - deletes all data!)")

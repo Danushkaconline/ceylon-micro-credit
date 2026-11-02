@@ -100,6 +100,7 @@ NEWS = [
      "body": "Nexora Credit and Properties is proud to open its office at 255/1 A, Colombo Road, Gampaha on 5th November 2026.\n"
              "Visit us for business loans, vehicle loans, group and SME loans and property finance, or call 071 224 1220."},
     {"title": "Special three-wheeler leasing plans for hiring drivers", "slug": "three-wheeler-leasing-plans",
+     "published_on": date(2026, 11, 6),
      "summary": "Flexible repayment plans that match the daily income of three-wheeler hiring drivers.",
      "body": "Our new three-wheeler leasing plans offer flexible instalments designed around the income of hiring drivers.\n"
              "Speak to our officers to find the right plan for you."},

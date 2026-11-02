@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site.company_name }} | {{ site.tagline }}{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{{ site.company_name }} - Business Loans, Mortgage Loans, Motor Bicycle & Three-Wheeler Leasing, Group Loans and SME Loans in {{ site.city }}.{% endblock %}">
-  <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/png">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="alternate icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/png">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -103,7 +104,7 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-3">
-        {% if site.img_logo %}<img src="{{ url_for('static', filename='img/logo-white.png') }}" alt="{{ site.company_name }}" class="footer-logo">
+        {% if site.img_logo %}<img src="{{ url_for('static', filename='img/logo-white.svg') }}" alt="{{ site.company_name }}" class="footer-logo">
         {% else %}<h5 class="text-white">{{ site.company_name }}</h5>{% endif %}
         <p>{{ site.mission }}</p>
         <div class="social">

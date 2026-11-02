@@ -27,7 +27,7 @@ SETTINGS = [
     # key, label, value
     ("company_name", "Company name", "Nexora Credit and Properties"),
     ("brand_initials", "Initials shown when there is no logo", "NC"),
-    ("tagline", "Tagline", "Small loans. Big dreams."),
+    ("tagline", "Tagline", "Trusted finance. Lasting value."),
     ("address", "Address", "255/1 A, Colombo Road, Gampaha"),
     ("city", "City / Branch", "Gampaha"),
     ("phone", "Telephone", "071 224 1220"),

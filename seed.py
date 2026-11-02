@@ -26,6 +26,7 @@ IMAGES = {key: photo(key) for key in IMAGE_KEYS}
 SETTINGS = [
     # key, label, value
     ("company_name", "Company name", "Nexora Credit and Properties"),
+    ("legal_name", "Registered company name (footer copyright)", "Nexora Credit & Properties (Pvt) Ltd."),
     ("brand_initials", "Initials shown when there is no logo", "NC"),
     ("tagline", "Tagline", "Trusted finance. Lasting value."),
     ("address", "Address", "255/1 A, Colombo Road, Gampaha"),

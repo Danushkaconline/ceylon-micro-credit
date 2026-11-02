@@ -95,9 +95,10 @@ SLIDES = [
 
 NEWS = [
     {"title": "Nexora Credit and Properties opens at Gampaha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
-     "summary": "Our office at 255/1 A, Colombo Road, Gampaha is now open to serve customers in the area.",
-     "body": "We are happy to welcome customers to our office at 255/1 A, Colombo Road, Gampaha.\n"
-             "Visit us for business loans, micro leasing and group loans, or call 071 224 1220."},
+     "published_on": date(2026, 11, 5),
+     "summary": "Our new office at 255/1 A, Colombo Road, Gampaha opens on 5th November 2026.",
+     "body": "Nexora Credit and Properties is proud to open its office at 255/1 A, Colombo Road, Gampaha on 5th November 2026.\n"
+             "Visit us for business loans, vehicle loans, group and SME loans and property finance, or call 071 224 1220."},
     {"title": "Special three-wheeler leasing plans for hiring drivers", "slug": "three-wheeler-leasing-plans",
      "summary": "Flexible repayment plans that match the daily income of three-wheeler hiring drivers.",
      "body": "Our new three-wheeler leasing plans offer flexible instalments designed around the income of hiring drivers.\n"
@@ -217,7 +218,7 @@ def seed_defaults(admin_username, admin_password):
 
     if not News.query.first():
         for n in NEWS:
-            db.session.add(News(published_on=date.today(), image=IMAGES.get(n["slug"], ""), **n))
+            db.session.add(News(**{"published_on": date.today(), **n}, image=IMAGES.get(n["slug"], "")))
 
     if not AdminUser.query.first():
         admin = AdminUser(username=admin_username)

@@ -18,7 +18,7 @@ IMAGE_KEYS = [
     "img_about", "img_about_home", "img_services", "img_calculator", "img_apply", "img_contact", "img_news",
     "business-loans", "micro-leasing", "micro-group-loans",
     "business-loan", "mortgage-loan", "motor-bicycle-leasing", "three-wheeler-leasing", "group-loans", "sme-loan",
-    "slide-business", "slide-leasing", "slide-group",
+    "slide-business", "slide-leasing", "slide-group", "slide-properties",
     "ceylon-micro-credit-opens-at-kadawatha", "three-wheeler-leasing-plans",
 ]
 IMAGES = {key: photo(key) for key in IMAGE_KEYS}
@@ -76,17 +76,21 @@ SETTINGS = [
 
 SLIDES = [
     {"eyebrow": "Business Loans", "title": "Finance that grows with your business",
-     "text": "Working capital and mortgage-backed loans for traders, shop owners and entrepreneurs.",
+     "text": "Working capital and mortgage-backed loans for traders, business owners and entrepreneurs across Sri Lanka.",
      "button_text": "Explore Business Loans", "button_link": "/services/business-loans",
      "image": IMAGES["slide-business"]},
-    {"eyebrow": "Micro Leasing", "title": "Own the vehicle that powers your income",
-     "text": "Easy leasing for motor bicycles and three-wheelers with a low down payment.",
-     "button_text": "Explore Leasing", "button_link": "/services/micro-leasing",
+    {"eyebrow": "Vehicle Loans", "title": "Drive home your dream vehicle",
+     "text": "Fast, flexible finance for cars, motor bicycles and three-wheelers - with quick approval.",
+     "button_text": "Explore Vehicle Loans", "button_link": "/services/vehicle-loan",
      "image": IMAGES["slide-leasing"]},
-    {"eyebrow": "Micro Group Loans", "title": "Grow together with your community",
-     "text": "Collateral-free group loans and SME loans designed for Sri Lankan entrepreneurs.",
+    {"eyebrow": "Group & SME Loans", "title": "Grow together with a trusted partner",
+     "text": "Group loans and SME finance designed for Sri Lankan entrepreneurs and growing teams.",
      "button_text": "Explore Group Loans", "button_link": "/services/micro-group-loans",
      "image": IMAGES["slide-group"]},
+    {"eyebrow": "Properties", "title": "Invest in property with confidence",
+     "text": "Buy, build or invest in land and homes with property finance from a partner you can trust.",
+     "button_text": "Talk to Us", "button_link": "/contact",
+     "image": IMAGES["slide-properties"]},
 ]
 
 NEWS = [
@@ -244,6 +248,19 @@ def rename_company(old, new):
     return count
 
 
+def sync_slides():
+    """Make the home page slides match SLIDES above (updates text/photos, adds missing ones)."""
+    existing = Slide.query.order_by(Slide.sort_order, Slide.id).all()
+    for order, data in enumerate(SLIDES):
+        slide = existing[order] if order < len(existing) else Slide()
+        for key, value in data.items():
+            setattr(slide, key, value)
+        slide.sort_order, slide.is_active = order, True
+        db.session.add(slide)
+    db.session.commit()
+    return len(SLIDES)
+
+
 def fill_missing_images():
     """Give the default pictures to items that have no image yet (keeps your own images)."""
     count = 0
@@ -282,6 +299,8 @@ if __name__ == "__main__":
             i = sys.argv.index("--rename" if "--rename" in sys.argv else "--replace")
             old, new = sys.argv[i + 1], sys.argv[i + 2]
             print(f"Renamed '{old}' -> '{new}' in {rename_company(old, new)} place(s).")
+        elif "--sync-slides" in sys.argv:
+            print(f"Home page slides updated: {sync_slides()}")
         elif "--images" in sys.argv:
             print(f"Added default images to {fill_missing_images()} item(s).")
         else:

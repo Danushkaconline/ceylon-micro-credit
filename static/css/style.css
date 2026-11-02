@@ -285,3 +285,6 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; }
   .hero-slide.has-image::before { background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.82)); }
   .hero-slide p { font-size: 1rem; }
 }
+
+/* Footer contact details: one line each on desktop */
+@media (min-width: 992px) { .footer-contact li { white-space: nowrap; } }

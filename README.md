@@ -17,7 +17,7 @@ The database (`instance/ceylon_micro_credit.db`) and all default content are cre
 
 ## Admin panel – edit the site without touching code
 
-URL: http://localhost:5090/admin (there is also a "Staff login" link in the footer)
+URL: http://localhost:5090/admin (not linked from the public site - type the address)
 
 Default login: `admin` / `ChangeMe@123`. **Change it right away** under *Change Password*,
 or set `ADMIN_USERNAME` / `ADMIN_PASSWORD` in `.env` before the first run.

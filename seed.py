@@ -19,7 +19,7 @@ IMAGE_KEYS = [
     "business-loans", "micro-leasing", "micro-group-loans",
     "business-loan", "mortgage-loan", "motor-bicycle-leasing", "three-wheeler-leasing", "group-loans", "sme-loan",
     "slide-business", "slide-leasing", "slide-group", "slide-properties",
-    "ceylon-micro-credit-opens-at-kadawatha", "three-wheeler-leasing-plans",
+    "nexora-opens-at-gampaha", "three-wheeler-leasing-plans",
 ]
 IMAGES = {key: photo(key) for key in IMAGE_KEYS}
 
@@ -47,7 +47,7 @@ SETTINGS = [
     ("mission", "Mission", "To empower small businesses and families across Sri Lanka with fast, fair and responsible financial services."),
     ("vision", "Vision", "To be the most trusted micro finance partner for every growing community in Sri Lanka."),
     ("map_embed", "Google Map search text", "255/1 A, Colombo Road, Gampaha, Sri Lanka"),
-    ("facebook", "Facebook URL", ""),
+    ("facebook", "Facebook URL", "https://www.facebook.com/profile.php?id=61596145051246"),
     ("whatsapp", "WhatsApp number (e.g. 94712241220)", "94712241220"),
     ("about_short", "Home page 'About us' intro",
      "Nexora Credit and Properties is a Gampaha-based micro finance company helping small business owners, "
@@ -95,7 +95,7 @@ SLIDES = [
 ]
 
 NEWS = [
-    {"title": "Nexora Credit and Properties opens at Gampaha", "slug": "ceylon-micro-credit-opens-at-kadawatha",
+    {"title": "Nexora Credit and Properties opens at Gampaha", "slug": "nexora-opens-at-gampaha",
      "published_on": date(2026, 11, 5),
      "summary": "Our new office at 255/1 A, Colombo Road, Gampaha opens on 5th November 2026.",
      "body": "Nexora Credit and Properties is proud to open its office at 255/1 A, Colombo Road, Gampaha on 5th November 2026.\n"
@@ -235,7 +235,7 @@ def rename_company(old, new):
     count = 0
     fields = {Setting: ["value"], Category: ["name", "tagline", "description"],
               Product: ["short_description", "description", "features"],
-              Slide: ["eyebrow", "title", "text"], News: ["title", "summary", "body"]}
+              Slide: ["eyebrow", "title", "text"], News: ["title", "summary", "body", "slug", "image"]}
     for model, cols in fields.items():
         for item in model.query.all():
             for col in cols:

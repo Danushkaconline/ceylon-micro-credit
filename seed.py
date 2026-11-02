@@ -64,7 +64,7 @@ SETTINGS = [
     ("stat_customers", "Counter: clients helped", "5000"),
     ("stat_disbursed", "Counter: loans disbursed (Rs. millions)", "500"),
     ("stat_products", "Counter: loan products", "6"),
-    ("img_logo", "Image: Company logo (header)", ""),
+    ("img_logo", "Image: Company logo (header)", "/static/img/logo.png"),
     ("img_about_home", "Image: home page 'About us'", IMAGES["img_about_home"]),
     ("img_about", "Image: About Us page banner", IMAGES["img_about"]),
     ("img_services", "Image: Services page banner", IMAGES["img_services"]),
